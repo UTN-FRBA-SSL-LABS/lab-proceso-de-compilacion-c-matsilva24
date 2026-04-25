@@ -65,11 +65,15 @@ check T10 "nm_programa_o.txt tiene area_circulo como U (indefinido)" 4 \
 check T11 "nm_ejecutable.txt tiene area_circulo como T (resuelto)" 4 \
   bash -c "test -f salidas/nm_ejecutable.txt && grep -qE 'T.*(area_circulo|_area_circulo)' salidas/nm_ejecutable.txt"
 
+gcc -Wall -DDEBUG programa.c matematica.c -o programa_debug
+mkdir -p salidas
+./programa_debug > salidas/salida_debug.txt
+
 check T12 "salida_debug.txt contiene [DEBUG]" 3 \
   bash -c "test -f salidas/salida_debug.txt && grep -q '\[DEBUG\]' salidas/salida_debug.txt"
 
 check T13 "Los fuentes compilan y producen factorial(5)=120" 5 \
-  bash -c "gcc -Wall programa.c matematica.c -o programa_ci && ./programa_ci | grep -q '120'"
+  bash -c "gcc -Wall -DDEBUG programa.c matematica.c -o programa_ci && ./programa_ci | grep -q '120'"
 
 check T14 "programa.o NO esta commiteado" 2 \
   bash -c "! test -f programa.o"
